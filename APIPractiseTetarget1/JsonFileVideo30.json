@@ -1,0 +1,43 @@
+[
+	{
+		"firstName": "Mukesh",
+		"lastName": "Ota",
+		"age": 31,
+		"adress": [
+			{
+				"city": "ald",
+				"country": "India"
+			},
+			{
+				"city": "pak",
+				"country": "India"
+			}
+		]
+	},
+	{
+		"firstName": "Dona",
+		"lastName": "Ota",
+		"age": 3,
+		"adress": [
+			{
+				"city": "cnb",
+				"country": "India"
+			},
+			{
+				"city": "Ban",
+				"country": "India"
+			}
+		]
+	},
+	[
+	  {
+				"city": "cnb",
+				"country": "India"
+			},
+			{
+				"city": "Ban",
+				"country": "India"
+			}
+	]
+	
+]

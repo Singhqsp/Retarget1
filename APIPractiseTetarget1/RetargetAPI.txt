@@ -1,0 +1,3302 @@
+ Rest Assured is a java Library for testing and validating Rest Services
+or API or Web Services..
+It is a open source tool avilable in market..
+Earlier it was devloped by Ruby and Groovy language which was
+not easily compatible to use.
+But later it was devloped by java which make it easy and and more 
+compactable.
+It was devloped by Johan Haleby in year of 2010..
+
+Advantage of Rest Assured:
+
+->It support schema Validation
+->Support JsonPath and xmlPAth
+
+Video 26 and Video27 do
+
+
+static Import:
+static import is a import in which if I do not want to write class 
+name again and again then we will write static import..
+this feature intraduced in version 1.5v
+
+
+
+
+Lets see method Chaning one Example:
+Using Collection:
+public class Demo {
+	public static void main(String[] args) {
+		List<String> names =Arrays.asList("Ind","pak","Aus","Ken");
+		
+		List<String> customNames= new ArrayList<String>();
+		
+		//names.add("Country");
+		
+		for(String s:names)
+		{
+		   String finalName=s+" Country";	
+		   customNames.add(finalName);
+		}
+		System.out.println(customNames);
+		
+		//Same program can be done by using method Chaning:
+		
+		Stream<String> newDAta=names.stream();
+		Stream<Object> updateddata=  newDAta.map(e -> e+"Fruit");
+		   List<Object> finalName=      updateddata.collect(Collectors.toList());
+		       
+		   System.out.println(finalName);
+		
+		
+		
+	}
+
+}
+
+Example2:
+package Day3MethodsChaning;
+
+public class SimpleExample {
+	
+	public SimpleExample m1()
+	{
+		System.out.println("Star");
+		return this;
+	}
+	public SimpleExample m2()
+	{
+		System.out.println("343");
+		return this;
+	}
+	public static void main(String[] args) {
+		SimpleExample s = new SimpleExample();
+		s.m1().m2();
+	}
+}
+
+
+Video 5:
+Mainly it is involved in three steps 
+1-Build Request
+2-Hit Request and get Response
+3-Validate Response
+Our url to practise
+https://restful-booker.herokuapp.com/
+
+
+
+Required deatils of hit API:
+->What hht method it will support?
+->File URL->BaseURL and BasePath
+for this URL:
+https://restful-booker.herokuapp.com/booking
+1-Build Request
+
+BaseURL-https://restful-booker.herokuapp.com/
+BasePath/booking
+
+Payload is mendatory for Creating data
+{
+    "firstname" : "Jim",
+    "lastname" : "Brown",
+    "totalprice" : 111,
+    "depositpaid" : true,
+    "bookingdates" : {
+        "checkin" : "2018-01-01",
+        "checkout" : "2019-01-01"
+    }
+
+To start this we have some terminology 
+RestAssured
+RestAsuresdSpecifiacation
+given();
+Here RestAssured is a class whose and given is a static
+method whose return type is ResuestSpecification;
+
+RequestSpecification requestspection =RestAssured.given();
+requestspection.log().all().
+requestspection.baseUri("https://restful-booker.herokuapp.com/booking/")
+requestspection.basePath("booking");
+requestspection.body("{
+    "firstname" : "Jim",
+    "lastname" : "Brown",
+    "totalprice" : 111,
+    "depositpaid" : true,
+    "bookingdates" : {
+        "checkin" : "2018-01-01",
+        "checkout" : "2019-01-01"
+    }");
+
+Now refactor in shorter way:
+
+
+Note:Here it is mendatory to provide that in which format we are sending the data for that we have content-type
+,So if you notice in postman it will take automaically but here in rest Assured it is mendatory to provide it.
+
+2-Hit Request and get Response
+   Response response= requestspection.post()
+  Note:Post return type Response
+  Both RequestSpicification and Response are interface
+3-
+     ValidateResponse validateResponse=response.then();
+      validateResponse.statusCode(200);
+
+
+Now consolidated code:
+   RestAssured.given()
+    .log().all().
+    .baseUri("https://restful-booker.herokuapp.com/booking/")
+    .basePath("booking");
+    .body("{
+    "firstname" : "Jim",
+    "lastname" : "Brown",
+    "totalprice" : 111,
+    "depositpaid" : true,
+    "bookingdates" : {
+        "checkin" : "2018-01-01",
+        "checkout" : "2019-01-01"
+    }")
+    .requestspection.post()
+    .statusCode(200);
+
+
+
+
+Now same way we can Get the request::
+
+//Build request:
+RequestSpecification reqspecfica=RestAssured.given();
+reqspecfica.baseUri("");
+reqspecfica.basepath("booking/{id}");
+reqspecfica.pathParam("id",1);
+
+Note:Here we are using basePath I am passing "CurlyBraces"{} inside which I am giving ID because so that it
+should pass the End point with pathParam...
+//Hit the request get the Response:
+Responsecresponse = reqspecfica.get();
+//ValidatableResponse validateResponse =response().then().log().all();
+validateResponse.statusCode(200);
+
+
+Video10:
+PathParameters and URL Parameters: 
+ 
+PathParameters:
+In this we will provide the pathparam() to provide
+the endpints which is chaging everytime
+
+https://www.google.com/news
+https://www.google.com/news/India/Karnataka
+In the above India and Karnataka can change any time according to our serching so to overcome we
+will go for this pathParameter or URL parameters...
+https://www.google.com/news/{country}/{city}
+
+Lets take an example of herokupp in our URL
+
+https://restful-booker.herokuapp.com/booking/:id
+
+RequestSpecification reqSpec = RestAssured.given();
+reqSpec.baseUri("https://restful-booker.herokuapp.com/booking/{id}")
+reqSpec.pathParam("id":1);
+
+URL parameter:
+In Url paramter we will not provide the pathParam methods we will directly use the
+curlybraces in URL
+Example:
+RestAssured.given().log().all()
+.baseUri("https://restful-booker.herokuapp.com/")
+.basePath("{basepath}/{bookingID}")
+.when()
+.get("https://restful-booker.herokuapp.com/{basePath}/{bookingId}",2,"booking");
+.then()
+.log()
+.all(); 
+
+Note:We can use both pathParameter and URL parameter simultainusly..
+
+Now Using Maps Cocncept How to work with it:
+psvm()
+{
+  Map<String,Object> pathParameter= new HashMap<>();
+   pathParameter.put("basePath","booking");
+   pathParameter.put("bookingId",2)
+  
+   RestAssured.given().log().all()
+
+   .baseUri("https://restful-booker.herokuapp.com/")
+   .basePath("{basePath}/{bookingId}")
+    
+    .pathParams(pathParameters)
+   
+   .when()
+
+       .get().then().log().all();
+   
+}
+
+
+
+Video11
+PUT
+A HTTP request method to update or create a resouces
+It replaces the current representation of the resouces with the new request 
+payload if resiuce is found.
+If resouce is not found on server,PUT should capable
+to create a new resouce
+Here we will get 201 ,200,204
+201->Resource is created
+200->Resouce is updated
+204->No content
+
+Patch
+->A HTTP request method to update a resource partially or completly
+->It represents what parts of resource need to be updated
+-->Not a safe method.
+
+Note:
+Put requres complete payload whereas PAtch requres only that perticular payload
+Can create resource if not found,Patch can not create resouces if not found..
+PUt->200,201,204
+Patch
+200,204
+
+Now do one patch program in same url::
+
+Delete:
+A HTTP request method to delete the resource
+It may have a request body and response body
+200(OK),204(No Content),202(Accepted)
+//Check for Delete
+
+Extract Data from Response from RestAssured:
+@Test
+	public void extractData()
+	{
+	  String data=	RestAssured.given()
+		.log().all()
+		.contentType("application/json")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.baseUri("https://restful-booker.herokuapp.com/booking")
+		.when().post()
+		.then()
+		.extract()
+                                  .body()
+		.asString();
+	  
+	  System.out.println("++++++++++++++++"+data);
+	}
+
+
+Here  to fetch the data from RestAssred we use one metthd as .extract().asString();
+Now we will go to fetch the data from in prettyFormat we will go for 
+ extract().asPrettyString(); 
+Note -If we do not give body then by default it will take body 
+
+
+ResrAssured in RequestSpecificatopn Specification:
+In this if we have multiple request and many of the lines are
+same in every request then we can go for
+@BeforeClass
+@Test
+
+By using spec() method we can continue the further steps 
+
+RequestSpecification rst;
+	@BeforeClass
+	public void commonData()
+	{
+		rst=RestAssured.given().log().all();
+		rst.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/");
+		
+		
+	}
+	@Test
+	public void createData()
+	{
+		RestAssured.given()
+		.spec(rst)
+		.basePath("booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then()
+		.statusCode(200)
+		.log()
+		.all();
+	}
+---------------------------------------------------
+ResponseSpecification in RestAssured
+In Response specifiaction we will go for RestAssured.except()
+Which is used to validate all the responses in the then section
+We will go for theis when for multiple request we want to provide the same response
+
+ResponseSpecification res;
+	@BeforeClass
+	public void setResponse()
+	{ 
+		 res = RestAssured.expect();	
+		res.statusCode(200)
+		.time(Matchers.lessThan(5000L))
+		.contentType(ContentType.JSON);
+		
+		
+	}
+	@Test
+	public void responseValidate()
+	{
+		
+		
+		RestAssured
+		.given()
+		.log().all()
+		.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then()
+		.spec(res);
+		
+		
+	}
+	@Test
+	public void responseValidate2()
+	{
+		
+		
+		RestAssured
+		.given()
+		.log().all()
+		.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"JimData\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then()
+		.spec(res);
+		
+		
+	}
+
+
+}
+
+
+
+Video19:
+Both RequestSpecification and ResponseSpecification Similtainusly
+public class UsingBothReqResSpecification {
+	@Test
+	public void m1()
+	{
+		RequestSpecification rst=RestAssured.given().log().all();
+		rst.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/booking");
+		
+		ResponseSpecification res = RestAssured.expect();	
+			res.statusCode(200)
+			.time(Matchers.lessThan(5000L))
+			.contentType(ContentType.JSON);
+			
+		
+		RestAssured
+	.given()
+	.spec(rst)
+	.body("{\r\n"
+			+ "    \"firstname\" : \"JimData\",\r\n"
+			+ "    \"lastname\" : \"Brown\",\r\n"
+			+ "    \"totalprice\" : 111,\r\n"
+			+ "    \"depositpaid\" : true,\r\n"
+			+ "    \"bookingdates\" : {\r\n"
+			+ "        \"checkin\" : \"2018-01-01\",\r\n"
+			+ "        \"checkout\" : \"2019-01-01\"\r\n"
+			+ "    },\r\n"
+			+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+			+ "}")
+	.when()
+	.post()
+	.then()
+	.spec(res);
+	}
+
+}
+
+Video 20:
+Asserting with different sets of Data:
+@Test
+	public void timeCheckData()
+	{
+		Response res= RestAssured.given()
+		.log().all().contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/booking/1")
+		.when().get();
+		System.out.println(res.getTime());
+		System.out.println(res.getTimeIn(TimeUnit.SECONDS));
+		res.then().time(Matchers.lessThan(5000L));
+		res.then().time(Matchers.greaterThan(2000L));
+		 
+	}
+
+}
+
+Video21:
+Default Value in RestAssured:
+There will be default value for BaseURI and Base Path which are static 
+so we will reinitialize the value one time and we can use it multiple 
+times...
+By default it will have some localhost8080...
+
+So if we reinitilize one time I can use it in testNg.xml also...
+package Practise;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+
+public class DefaultValuesInVideo21 {
+	RequestSpecification rs ;
+	ResponseSpecification rsp;
+	@BeforeClass
+	public void setup()
+	{
+		
+				
+		RestAssured.baseURI="https://restful-booker.herokuapp.com/";
+		RestAssured.basePath="booking";
+		
+		rs=RestAssured.given()
+				.log().all().contentType("application/json");
+		rsp=RestAssured.expect()
+				.statusCode(200);
+	}
+	
+	@Test
+	public void defaultTime()
+	{
+		//.baseUri("https://restful-booker.herokuapp.com/")
+		//.basePath("booking")
+		RestAssured.given().spec(rs)
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then().spec(rsp);
+		
+		
+	}
+	@Test
+	public void defaultTime1()
+	{
+		RestAssured.given().spec(rs)
+		//.baseUri("https://restful-booker.herokuapp.com/")
+		//.basePath("booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim1\",\r\n"
+				+ "    \"lastname\" : \"Brown1\",\r\n"
+				+ "    \"totalprice\" : 1111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then()
+		.spec(rsp);
+		
+	}
+	
+}
+
+
+
+
+
+Video22:
+Headers In PostMan:
+Headers are metadata associated with request
+and response of API..
+It may contatin Autorization,cookies,body type
+,proxies,additional data for API work
+It will be in th form of Key and Value or Key with multiple Values..
+It is not compulsary that every time we will pass the headers sometimes
+it will be added automaticaly when we send requrest..
+
+public class Video22HeadersExamples {
+	
+	@Test
+	public void headers()
+	{
+		RestAssured.given().log().all()
+		.header("Key1","value1")
+		.when()
+		.get();
+	}
+
+}
+In this example  we can see the RTE but headers we will get..
+@Test
+	public void PassingHeadersMultipleValue()
+	{
+		RestAssured.given().log().all()
+		.header("Key1","value1")
+		.header("Key1","value11111")
+		.header("Key","val1","val2")
+		.when()
+		.get();
+	}
+
+
+
+
+->>In the same way we can pass the key and value of Header in seperate
+Object and we will pass the reference in header();
+
+Same we are having one more methods called as headers() in this we can pass multiple key and value pairs...
+
+@Test
+	public void PassingHeadersMultipleValue()
+	{
+		
+                                  RestAssured.given().log().all()
+		.headers("K1","v1","K2","v2","K3","v3","K3","v4")
+		.when()
+		.get();
+	}
+
+
+So it is not good practise to pass the data  derectly so
+we will use maps
+ 
+@Test
+	public void passHeadersMap()
+	{
+		Map<String, String> headermap= new HashMap<>();
+		headermap.put("h1","v1");
+		headermap.put("h2","v2");
+		headermap.put("h3","v3");
+		headermap.put("h4","v4");
+		headermap.put("h5","v5");
+		
+		RestAssured.given()
+		.log().all()
+		.headers(headermap)
+		.when().get();				
+	}
+
+
+Using Maps is a best Way 
+@Test
+	public void passHeaderInMaps()
+	{
+		List<Header> allHeade=new ArrayList<>();
+		Header head = new Header("KK1","VV2");
+		Header head1 = new Header("KK2","VV3");
+		Header head2 = new Header("K1","VV4");
+		allHeade.add(head);
+		allHeade.add(head1);
+		allHeade.add(head2);
+		Headers headerall=new Headers(allHeade);
+		RestAssured.given()
+		.log().all()
+		.headers(headerall)
+		.when().get();
+		
+	}
+
+
+Video24
+Json Path::
+Simlar to xpath but differs in syntax..
+
+JsonPath is an expression to refer or uniquely identifying
+a node or element in a JSON document..
+It can also be called as query language for JSON document.
+Rest Assured used Groovy.s Gpath notation and is not
+to be confused with Jayway's JsonPath syntax
+No need to add any extry lib.. and Rest Assured includes
+that by default..
+
+Some Basic Rules:
+->Root nodes is represented using dollor($) sign...
+->Child node is represent using (.)..
+->We can not use square bracket [] to represent child node..
+
+
+Now we will go for one simple code in which we will add 
+try to fetch the data from jsonPathFinder in google then 
+we will go for script where will use object of JsonPath then
+by using it we will use get methods
+{
+  "fn":"Raja",
+  "ln":"Rani"
+}
+
+
+Real Script
+package Practise;
+
+import org.testng.annotations.Test;
+
+import io.restassured.path.json.JsonPath;
+
+public class Video24JsonIntro {
+	@Test
+	public void JsonIntroData()
+	{
+		String jsonData="{\r\n"
+				+ "  \"fn\":\"Raja\",\r\n"
+				+ "  \"ln\":\"Rani\"\r\n"
+				+ "}";
+		JsonPath jp = new JsonPath(jsonData);
+		String data= jp.get("fn");
+		System.out.println(data);
+		
+		
+	}
+
+}
+
+We can also use one more overloaded methof of get( ). whose return type is Object but this method we will use
+when we are not aware what type of data we are going to fetch...
+
+Ques:When we get class Cast exceptions?
+Using get method we will get() ->classCast exception
+If we use the get method if it is fetch String Datatype but it is fetch
+number then we get class Cast Exception.
+
+Ques->
+What will happen if I pass wrong jsonPath..
+It I am using getString to fetch the String then we will get null but intead of string If I use any other like getBoolean(),
+getInt() then we require null pointer exception,
+
+Ques-How to get the root node?
+System.out.println((Object)jsonPath.get("$"));
+Video26:
+Normal Code for JSON are
+{
+  "Name":"Abhi",
+  "Rollnum":123,
+  "trainer":"maths",
+   "sal":212,
+   "adress":{
+     "place":"Hyd",
+     "Area":"KPHB"
+     
+     
+   }
+  
+  
+}
+Now try to fetch the data from given JSON::
+
+public class Video26JSonFetchData {
+	
+	@Test
+	public void JsonDataFetch()
+	{
+		String data="{\r\n"
+				+ "  \"Name\":\"Abhi\",\r\n"
+				+ "  \"Rollnum\":123,\r\n"
+				+ "  \"trainer\":\"maths\",\r\n"
+				+ "   \"sal\":212,\r\n"
+				+ "   \"adress\":{\r\n"
+				+ "     \"place\":\"Hyd\",\r\n"
+				+ "     \"Area\":\"KPHB\"\r\n"
+				+ "     \r\n"
+				+ "     \r\n"
+				+ "   }\r\n"
+				+ "  \r\n"
+				+ "  \r\n"
+				+ "}";
+		
+		JsonPath js = new JsonPath(data);
+		
+		System.out.println(js.get("Name"));
+		System.out.println(js.getString("adress.place"));
+		
+		
+		
+	}
+
+}
+
+
+Video 27:
+Only told about Storing of Array and Array inside Object and Array::
+
+Video28:
+[
+ {
+  "id":"Star",
+   "data":"boolean",
+   "sub":
+   [
+     {
+       "maths":"344",
+       "phy":"444"
+     },
+     {
+       "comp":"434",
+       "eng":"545",
+       "rgt":"455"
+     }
+   ]
+   
+ },
+ {
+  "id":"Star",
+   "data":"boolean",
+   "sub":"java"
+   
+ }
+ 
+   
+]
+
+Video28: JSON Path for tricky Array and Nested Json Array:
+[
+ "10",
+ "20",
+ "30",
+ "40",
+ "50"
+]
+The above is also the Json Code:
+
+Fetch from Simple Array
+public class Video28 {
+	@Test
+	public void JsonArray()
+	{
+		String data="[\r\n"
+				+ " \"10\",\r\n"
+				+ " \"20\",\r\n"
+				+ " \"30\",\r\n"
+				+ " \"40\",\r\n"
+				+ " \"50\"\r\n"
+				+ "]";
+		JsonPath jp = new JsonPath(data);
+		Object obj= jp.get("[0]");
+		System.out.println(obj);
+		System.out.println(jp.getString("[0]"));
+	}
+
+}
+
+How to calculate the size of perticular Array:(Video28)
+[
+  [
+	"10",
+	"20",
+	"30",
+	"40",
+	"50"
+],
+[
+	"10",
+	"20",
+	"30",
+	"40",
+	"50"
+]
+]
+
+public class Video28 {
+	@Test
+	public void JsonArray()
+	{
+		String data="[\r\n"
+				+ " \"10\",\r\n"
+				+ " \"20\",\r\n"
+				+ " \"30\",\r\n"
+				+ " \"40\",\r\n"
+				+ " \"50\"\r\n"
+				+ "]";
+		JsonPath jp = new JsonPath(data);
+	    List<Object> list = jp.getList("$");
+	    System.out.println(list.size());
+	
+	
+	}
+
+}
+
+How To fetch Level two Array::
+
+
+@Test
+	public void multipleElemet()
+	{
+		String data="[\r\n"
+				+ "  [\r\n"
+				+ "	\"10\",\r\n"
+				+ "	\"20\",\r\n"
+				+ "	\"30\",\r\n"
+				+ "	\"40\",\r\n"
+				+ "	\"50\"\r\n"
+				+ "],\r\n"
+				+ "[\r\n"
+				+ "	\"10\",\r\n"
+				+ "	\"20\",\r\n"
+				+ "	\"30\",\r\n"
+				+ "	\"40\",\r\n"
+				+ "	\"50\"\r\n"
+				+ "]\r\n"
+				+ "]";
+		
+		JsonPath jp = new JsonPath(data);
+		System.out.println(jp.getString("[1][1]"));
+		
+		
+	}
+
+
+Case2:
+@Test
+	public void multipleElemet()
+	{
+		String data="[\r\n"
+				+ "  [\r\n"
+				+ "	\"10\",\r\n"
+				+ "	\"20\",\r\n"
+				+ "	\"30\",\r\n"
+				+ "	\"40\",\r\n"
+				+ "	\"50\"\r\n"
+				+ "],\r\n"
+				+ "[\r\n"
+				+ "	\"10\",\r\n"
+				+ "	\"20\",\r\n"
+				+ "	\"30\",\r\n"
+				+ "	\"40\",\r\n"
+				+ "	\"50\"\r\n"
+				+ "]\r\n"
+				+ "]";
+		
+		JsonPath jp = new JsonPath(data);
+		System.out.println(jp.getString("[1][1]"));
+		System.out.println(jp.getList("$").size());//Size of all Array it will give
+		//But I want the particular array so
+		System.out.println(jp.getList("$").get(1));//[10,20,30,40,50]
+		 
+		List<Object> l = (List<Object>) jp.getList("$").get(1);
+		System.out.println(l.size());
+		
+		
+	}
+
+
+
+Video29:
+[
+  {
+   "firstName":"Mukesh",
+   "lastName":"Ota"
+    "age":           31
+     "adress:"[
+           {
+             "city":"ald"
+             "country":"India"             
+           },
+           {
+             "city":"pak"
+             "country":"India"             
+           }
+
+                    ]
+              
+  },
+ {
+   "firstName":"Dona",
+   "lastName":"Ota"
+    "age":           3
+     "adress:"[
+           {
+             "city":"cnb"
+             "country":"India"             
+           },
+           {
+             "city":"Ban"
+             "country":"India"             
+           }
+
+                    ]
+              
+  }
+]
+
+Video29 Fetching Data Script:
+
+public class Video29 {
+	
+	@Test
+	public void m1()
+	{
+		String s="[\r\n"
+				+ "  {\r\n"
+				+ "   \"firstName\":\"Mukesh\",\r\n"
+				+ "   \"lastName\":\"Ota\",\r\n"
+				+ "    \"age\":      31,\r\n"
+				+ "     \"adress\":[\r\n"
+				+ "           {\r\n"
+				+ "             \"city\":\"ald\",\r\n"
+				+ "             \"country\":\"India\"             \r\n"
+				+ "           },\r\n"
+				+ "           {\r\n"
+				+ "             \"city\":\"pak\",\r\n"
+				+ "             \"country\":\"India\"             \r\n"
+				+ "           }\r\n"
+				+ "\r\n"
+				+ "              ]\r\n"
+				+ "              \r\n"
+				+ "  },\r\n"
+				+ " {\r\n"
+				+ "   \"firstName\":\"Dona\",\r\n"
+				+ "   \"lastName\":\"Ota\",\r\n"
+				+ "    \"age\":           3,\r\n"
+				+ "     \"adress\":[\r\n"
+				+ "           {\r\n"
+				+ "             \"city\":\"cnb\",\r\n"
+				+ "             \"country\":\"India\"             \r\n"
+				+ "           },\r\n"
+				+ "           {\r\n"
+				+ "             \"city\":\"Ban\",\r\n"
+				+ "             \"country\":\"India\"             \r\n"
+				+ "           }\r\n"
+				+ "\r\n"
+				+ "                    ]\r\n"
+				+ "              \r\n"
+				+ "  }\r\n"
+				+ "]";
+		JsonPath jp = new JsonPath(s);
+		String data= jp.getString("[0].adress[0].city");
+		System.out.println(data);
+		
+	}
+
+}
+
+Video29:
+Fetch the Data from File of Json And 
+
+public class Video30FileJsonFetch {
+	@Test
+	public void m1()
+	{
+		String s = System.getProperty("user.dir")+"./JsonFileVideo30.json";
+		File f = new File(s);
+		System.out.println(s);
+		JsonPath jp = new JsonPath(f);
+		System.out.println(jp.getString("[2][1].city"));
+	}
+
+}
+
+
+Video30:
+Fetch the JSON path Filters In Rest Assured:
+When ever we want to fetch the multiple data of same type..
+-----------------------------------------------------------------------------
+[
+	{
+		"firstName": "Mukesh",
+		"lastName": "Ota",
+		"age": 31,
+		"adress": [
+			{
+				"city": "ald",
+				"country": "India"
+			},
+			{
+				"city": "pak",
+				"country": "India"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh1",
+		"lastName": "Ota1",
+		"age": 311,
+		"adress": [
+			{
+				"city": "ald1",
+				"country": "India1"
+			},
+			{
+				"city": "pak1",
+				"country": "India1"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh2",
+		"lastName": "Ota2",
+		"age": 312,
+		"adress": [
+			{
+				"city": "ald2",
+				"country": "India2"
+			},
+			{
+				"city": "pak2",
+				"country": "India2"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh3",
+		"lastName": "Ota3",
+		"age": 313,
+		"adress": [
+			{
+				"city": "ald3",
+				"country": "India3"
+			},
+			{
+				"city": "pak3",
+				"country": "India3"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh4",
+		"lastName": "Ota4",
+		"age": 314,
+		"adress": [
+			{
+				"city": "ald4",
+				"country": "India4"
+			},
+			{
+				"city": "pak4",
+				"country": "India4"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh5",
+		"lastName": "Ota5",
+		"age": 315,
+		"adress": [
+			{
+				"city": "ald5",
+				"country": "India5"
+			},
+			{
+				"city": "pak5",
+				"country": "India5"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh6",
+		"lastName": "Ota6",
+		"age": 316,
+		"adress": [
+			{
+				"city": "ald6",
+				"country": "India6"
+			},
+			{
+				"city": "pak6",
+				"country": "India6"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh7",
+		"lastName": "Ota7",
+		"age": 317,
+		"adress": [
+			{
+				"city": "ald7",
+				"country": "India7"
+			},
+			{
+				"city": "pak7",
+				"country": "India7"
+			}
+		]
+	
+		
+	}
+]	
+----------------------------------------------------
+blic class Video30 {
+	@Test
+	public void fetchMultipleData()
+	{
+		String path= System.getProperty("user.dir")+"./MultipleDataFetch.json";
+	
+		File f = new File(path);
+		
+		JsonPath jp = new JsonPath(f);
+		
+		System.out.println(jp.getString("[0].firstName"));
+		   //It will fetch all the data of that perticular JSON which are similar
+		   List<Object> fn = jp.getList("firstName");
+		   System.out.println(fn+"d");
+		   System.out.println(fn.toString()+"d");
+		   
+		   
+		   
+		   	}
+	
+	
+
+}
+Note:
+If you donot have that value it will give the  null..
+
+-------------------------------------------------------------------------
+Now if I want to fetch only that value which is present for that perticular
+condition::
+
+@Test
+	public void fetchMultipleData()
+	{
+		String path= System.getProperty("user.dir")+"./MultipleDataFetch.json";
+	
+		File f = new File(path);
+		
+		JsonPath jp = new JsonPath(f);
+		
+		System.out.println(jp.getString("[0].firstName"));
+		   //It will fetch all the data of that perticular JSON which are similar
+		   List<Object> fn = jp.getList("firstName");
+		   System.out.println(fn+"d");
+		   System.out.println(fn.toString()+"d");
+		   
+		   List<Object> perticularlastNameName=jp.getList("findAll{it.age==31}.lastName");
+		   
+		   System.out.println(perticularlastNameName);
+		   
+		   List<Object> fetchAllCity=jp.getList("findAll{it.lastName=='Ota'}.adress.city");
+		   
+		   System.out.println(fetchAllCity);
+		   
+}
+
+---------------------------------------------------------------------------
+Same way we can go for multiple conditios by using and keyword with find() ::
+
+@Test
+	public void fetchMultipleData()
+	{
+		String path= System.getProperty("user.dir")+"./MultipleDataFetch.json";
+	
+		File f = new File(path);
+		
+		JsonPath jp = new JsonPath(f);
+		
+		System.out.println(jp.getString("[0].firstName"));
+		   //It will fetch all the data of that perticular JSON which are similar
+		   List<Object> fn = jp.getList("firstName");
+		   System.out.println(fn+"d");
+		   System.out.println(fn.toString()+"d");
+		   
+		   String ss = jp.getString("find{it.firstName=='Mukesh' & it.lastName=='Ota'}.age");
+		   
+		   System.out.println(ss);
+		   	
+	      
+	}
+	
+
+//Same way we can use or keyWord
+
+---------------------------------------------------------------------
+Same way we can use > and < then also
+
+@Test
+	public void fetchMultipleData()
+	{
+		String path= System.getProperty("user.dir")+"./MultipleDataFetch.json";
+	
+		File f = new File(path);
+		
+		JsonPath jp = new JsonPath(f);
+		
+		System.out.println(jp.getString("[0].firstName"));
+		   //It will fetch all the data of that perticular JSON which are similar
+		   List<Object> fn = jp.getList("firstName");
+		   System.out.println(fn+"d");
+		   System.out.println(fn.toString()+"d");
+		   
+		   String ss = jp.getString("find{it.firstName=='Mukesh' & it.lastName=='Ota'}.age");
+		   
+		   System.out.println(ss);
+		   
+		   System.out.println(jp.getList("findAll{it.age>311}.firstName"));
+		   	
+	      
+	}
+---------------------------------------------------------------------------------------------------------
+Same way if i Want to getSize of jsonpath:
+
+ System.out.println(jp.getInt("size()"));     
+----------------------------------------------------------------------------------------------------------
+Now we will do little bit change in Json: we have first array then object then array
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Inline Assertion:
+
+Assertion 
+
+Assertion of Tokens:
+As we know that tokens are genrated so we need to check weather it is it is null or not:
+we can do by using method assertNotNull():
+@Test
+	public void assertToken()
+	{
+	  String d=RestAssured.given()
+		.log().all()
+		.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/auth")
+		
+		.body("{\r\n"
+				+ "    \"username\" : \"admin\",\r\n"
+				+ "    \"password\" : \"password123\"\r\n"
+				+ "}")
+		
+		.when()
+		.post()
+		.then()
+		.log().all()
+		//.statusCode(200)
+		.extract()
+		.asString();
+	  
+	  JsonPath jp = new JsonPath(d);
+	  
+      System.out.println(jp.getString("token").toString());
+	  
+	  
+	  Assert.assertNotNull(jp.get("token"));
+	  
+	  
+	  
+	 
+	}
+
+
+Now Same thing we can do by sing Inline assertion in one line:
+
+@Test
+	public void inlineAssertion()
+	{
+		RestAssured.given()
+		.log().all()
+		.contentType("application/json")
+		.baseUri("https://restful-booker.herokuapp.com/auth")
+		.body("{\r\n"
+				+ "    \"username\" : \"admin\",\r\n"
+				+ "    \"password\" : \"password123\"\r\n"
+				+ "}")
+		.when()
+		.post()
+		.then()
+		.log()
+		.all()
+		//Check weather token is empty or not
+		.body("token",Matchers.notNullValue())
+		//It will also calculate the length is equal or not
+		.body("token.length()",Matchers.is(15))
+		//It will also calculate the length is equal or not
+		
+		.body("token.size()",Matchers.equalTo(15))
+		
+		//Check the regex data is present or not
+		
+		.body("token",Matchers.matchesRegex("^[a-z0-9]+$"));
+		
+		
+		
+	}
+
+------------------------------------------------------------------------------
+Now we will assert that perticular data is present or not:
+.body("bookingid",Matchers.hasItems(2,3));
+	
+@Test
+	public void perticularDataThereOrNot()
+	{
+			RestAssured.given()
+			.log().all()
+			.contentType("application/json")
+			.baseUri("https://restful-booker.herokuapp.com/booking")
+			.body("[\r\n"
+					+ "  {\r\n"
+					+ "    \"bookingid\": 1\r\n"
+					+ "  },\r\n"
+					+ "  {\r\n"
+					+ "    \"bookingid\": 2\r\n"
+					+ "  },\r\n"
+					+ "  {\r\n"
+					+ "    \"bookingid\": 3\r\n"
+					+ "  },\r\n"
+					+ "  {\r\n"
+					+ "    \"bookingid\": 4\r\n"
+					+ "  }\r\n"
+					+ "]")
+			.when()
+			.get()
+			.then()
+			.log()
+			.all()
+			.body("bookingid",Matchers.hasItems(2,3));
+		}
+
+
+
+
+------------------------------------------------------------------------------------------------
+JSON  Schema::
+
+It is a specification or language for defining s
+tructure and content of JSON object..
+It is a metadata ->data about data
+It helps to validate a JSON object or array
+Easy to understatnd by human 
+
+If I want to check the validation that Name must be string age and also we can check the range
+Here we can go for Basic Json Schema the range of all the data
+-------------------------------------------------------------------------------
+Video33 Json Schema Validate:
+To go with json schema we need to go to jsonSchema.net where we want to copy the the json body and
+we need to paste the payload and we need to go for the that perticular validation we will provide...
+
+Now we must create the new file in src/main/resources and copy the scheme code and paste here .
+
+Give this code to the given url
+{
+    "bookingid": 1,
+    "booking": {
+        "firstname": "Jim",
+        "lastname": "Brown",
+        "totalprice": 111,
+        "depositpaid": true,
+        "bookingdates": {
+            "checkin": "2018-01-01",
+            "checkout": "2019-01-01"
+        },
+        "additionalneeds": "Breakfast"
+    }
+}
+
+and try to validate the jsoncode of ID:::
+Note:
+To go for validation we require  JsonSchemaValidater class which we need to add the dependencies:
+
+.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("ValidateJsonSchema.json"));
+
+
+
+@Test
+	public void m1()
+	{
+		RestAssured.given()
+		.log().all()
+		.contentType(ContentType.JSON)
+		.baseUri("https://restful-booker.herokuapp.com/booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.when().post()
+		.then()
+		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("ValidateJsonSchema.json"));
+	}
+ 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Video34:Create payload:
+public class Vedio34JsonPayload {
+	
+	//@Test
+	public void createDataMapsOfString()
+	{
+		Map<String,String> payloadString = new HashMap();
+		
+		payloadString.put("id", "1");
+		payloadString.put("name", "Abhi");
+		payloadString.put("rollNum", "123");
+		payloadString.put("boolean", "false");
+		
+		RestAssured.given()
+		.log()
+		.all()
+		.body(payloadString)
+		.when()
+		.get();
+		
+	}
+	
+	@Test
+	public void createDataMapsOfObject()
+	{
+		Map<String,Object> payloadString = new LinkedHashMap<>();
+		
+		payloadString.put("id", 1);
+		payloadString.put("name", "Abhi");
+		payloadString.put("rollNum", 123);
+		payloadString.put("boolean", false);
+		
+		RestAssured.given()
+		.log()
+		.all()
+		.body(payloadString)
+		.when()
+		.get();
+		
+	}
+
+}
+
+================================================
+Video 35 Nested Object jsonPayload Created:
+@Test
+	public void nestedJsonObjectCheck()
+	{
+		Map<String,Object> O=new LinkedHashMap();
+		O.put("id","21");
+		O.put("ade",35);
+		
+		Map<String,Object> adrMap=new LinkedHashMap();
+		adrMap.put("City","Hyd");
+		adrMap.put("Street","2");
+		adrMap.put("location","hyderabad");
+		
+		O.put("adress",adrMap);
+		
+		RestAssured.given()
+		.log().all()
+		.body(O)
+		.when()
+		.get()
+		;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+
+=======================================================
+Video36:
+Create Simple Json Array:
+
+@Test
+	public void createArrayPayload()
+	{
+		Map<String, Object> empDetail= new LinkedHashMap<>();
+		empDetail.put("id",1);
+		empDetail.put("name","sss");
+		empDetail.put("class",3);
+		empDetail.put("Com","TCS");
+		
+		Map<String, Object> empDetai= new LinkedHashMap<>();
+		empDetai.put("id",1);
+		empDetai.put("name","sss");
+		empDetai.put("class",3);
+		empDetai.put("Com","TCS");
+		
+		
+		List allEmp= new ArrayList<>();
+		allEmp.add(empDetail);
+		allEmp.add(empDetai);
+		
+		RestAssured .given()
+		.log()
+		.all()
+		.body(allEmp)
+		.get();
+}
+============================================
+Video Comple Payload Video37:
+@Test
+	public void createComplexData()
+	{
+
+		List finalPayload=new ArrayList();
+		
+		
+		Map<String, Object> payload1=new LinkedHashMap<>();
+		payload1.put("id", 1);
+		payload1.put("firstName","Abhi");
+		payload1.put("ln","Singh");
+		payload1.put("email","xyz@gmail.com");
+		payload1.put("Gender","M ");
+		
+		List mobNum=new ArrayList<>();
+		mobNum.add("1234567");
+		mobNum.add("8889899");
+		payload1.put("monNum", mobNum);
+		
+		
+		Map<String, Object> skills=new HashMap<>();
+		
+		skills.put("java","****");
+		skills.put("Auto","***");
+		
+		payload1.put("Skills",skills);
+		
+		finalPayload.add(payload1);
+		
+		
+		Map<String, Object> payload2=new LinkedHashMap<>();
+		payload2.put("id", 1);
+		payload2.put("firstName","Abhi");
+		payload2.put("ln","Singh");
+		payload2.put("email","xyz@gmail.com");
+		payload2.put("Gender","M ");
+		
+		List mobNum1=new ArrayList<>();
+		mobNum1.add("1234567");
+		mobNum1.add("8889899");
+		payload1.put("monNum", mobNum1);
+		
+		
+		Map<String, Object> skills1=new HashMap<>();
+		
+		skills1.put("java","****");
+		skills1.put("Auto","***");
+		
+		payload1.put("Skills",skills1);
+		
+		finalPayload.add(payload2);
+		
+		RestAssured.given()
+		.log().all()
+		.body(finalPayload)
+		.when()
+		.get();
+		
+		
+		
+		
+	}
+
+==============================================
+Video 38 Mock API JSON Response"
+
+It means create your own API data and the Url end points to set 
+the data:
+
+https://designer.mocky.io/
+We can genarate by this URL:
+ 
+===================================================
+Video39"
+Convert JsonObject into JAva Map:
+
+{
+"id": 1,
+"name": "Care",
+"gmail": "xyz@gmail.com"
+}
+
+@Test
+	public void jsonIntoObjectData()
+	{
+		 Map d = RestAssured.when()
+		.get("https://run.mocky.io/v3/d4c02069-256c-4dfa-9c2c-cb0f3287165a")
+		.as(Map.class);
+		 
+		 String data= (String) d.get("name"); 
+		 System.out.println(data);//Care
+	}
+
+
+----------------------------------------------------
+If I want ro print all the keys of the following 
+
+@Test
+	public void jsonIntoObjectData()
+	{
+		 Map d = RestAssured.when()
+		.get("https://run.mocky.io/v3/d4c02069-256c-4dfa-9c2c-cb0f3287165a")
+		.as(Map.class);
+		 
+		 String data= (String) d.get("name"); 
+		 System.out.println(data);
+		 
+		 d.keySet().forEach(K -> System.out.println(K));
+	}
+}
+
+
+
+-----------------------------------------------------------------------
+If We have nested Key and value:
+
+https://run.mocky.io/v3/4067ea3b-8f75-4009-be7c-83b5e1d6c33f
+{
+  "id":"1,
+  "name": "Card",
+  "last": "Den",
+  "skills":
+         {
+        "java":"**",
+        "Automation":"***"       
+       }
+  
+}
+
+For the above program we will try to fetch the value of skills but we can
+not fetch in the form of String so first we need to convert it into 
+Maps:
+
+@Test
+	public void jsonIntoObjectData()
+	{
+		 Map d = RestAssured
+		.get("https://run.mocky.io/v3/4067ea3b-8f75-4009-be7c-83b5e1d6c33f")
+		.as(Map.class);
+	     
+		 Map<String,String> data= (Map<String,String>) d.get("skills");
+		System.out.println(data.get("java"));
+		
+	
+	}
+
+Note:
+new TypeRef<Map<String,Object>>(){}
+It is genrelly used to convert genric class in Maps
+
+=======================================================
+Video40:
+Note:Object can be converted into Maps then we can fetch::
+
+public class VIdeo40JsonArrayResponseToJavaList {
+	//https://run.mocky.io/v3/e1cd9e3a-629d-4517-b749-3c740e8694be
+	/*[
+	{
+	"id": "1",
+	"name": "Raja",
+	"last-named": "Singh",
+	"phone": {
+	"home": 1234,
+	"office": 33232
+	}
+	},
+	{
+	"id": "2",
+	"name": "Raj",
+	"last-named": "Sing",
+	"phone": {
+	"home": 12343,
+	"office": 332323
+	}
+	}
+	]
+	*/
+	@Test
+	public void arrayResponse()
+	{
+		List<Object> array = RestAssured.given()
+		.log().all()
+		.get("https://run.mocky.io/v3/e1cd9e3a-629d-4517-b749-3c740e8694be")
+		.as(List.class);
+		
+		System.out.println(array.size());
+		
+		System.out.println(array.get(0));//Print peticular
+		
+		Map<Object, String> obj =(Map<Object, String>) array.get(0);
+		
+		System.out.println(obj.get("id"));
+		
+		
+	}
+
+
+======================================================================
+If we want to convert my Response in class Type we will use  new TypeRef<List<String <Object>>>
+We use this because in above we are doing type casting but here no need to use this:
+
+	@Test
+	public void arrayResponseGenric()
+	{
+		List<Map<String, Object>> array = RestAssured.given()
+		.log().all()
+		.get("https://run.mocky.io/v3/e1cd9e3a-629d-4517-b749-3c740e8694be")
+		.as(new TypeRef<List<Map<String,Object>>>() {
+		});
+		
+		System.out.println(array.size());
+		
+		System.out.println(array.get(0));//Print peticular
+		
+		Map<String, Object> data= array.get(0);
+		System.out.println(data);
+		System.out.println(data.get("id"));
+		
+	}
+
+
+}
+
+=========================================================================================
+How to handle Dynamic Response?
+Dynamic reponse means sometimes  it will return the array or Object we are not sure about of it ..
+Like take an example of Bamking domain
+But in real time without understanding the funtinality of that API we can not do it randomly...
+So we will have to understand the API response then only we can handle it..
+
+When we get com.fasterxml.jackson.databind.exe Exception?
+When we we try to fetch the data as JSon Object but it is JSONarray  or vice versa the we will get exception
+
+package Practise;
+
+import java.util.List;
+import java.util.Map;
+
+import org.testng.annotations.Test;
+import com.github.scribejava.core.model.Response;
+
+import io.restassured.RestAssured;
+
+public class Video41DynamicElement {
+	
+	//@Test
+	public void arrayFetchByObjectResponse()
+	{
+		io.restassured.response.Response res= RestAssured.when().get("https://run.mocky.io/v3/74d64c78-0c66-4126-a82f-5d9b3c07e91f");
+		  
+		Map data = res.as(Map.class);
+		
+		System.out.println(data.keySet());
+		//RTEcom.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `java.util.LinkedHashMap
+		
+		
+		
+		
+		
+	
+		
+	}
+	//@Test
+	public void fetchArrayGotArray()
+	{
+		//here I am providing Proper array so array data fetching
+		io.restassured.response.Response res= RestAssured.get("https://run.mocky.io/v3/fdae525f-ac6b-41d1-a22a-559bb3ce3010");
+		  
+		 List data = res.as(List.class);
+		
+		System.out.println(data.size());
+		
+	}
+	@Test
+	public void fetchArrayGotObject()
+	{
+		//here I am providing Proper array so array data fetching
+		io.restassured.response.Response res= RestAssured.get("https://run.mocky.io/v3/2407d9ad-8332-42f4-b739-6d627b3ec160");
+		  
+		 List data = res.as(List.class);
+		
+		System.out.println(data.size());
+		//RTE: com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `java.util.ArrayList
+	}
+	
+	
+
+}
+
+//So in the above program one time we are getting issue with dymaic element so to overthat
+issue we will use istanceOf
+
+@Test
+	public void dynamicDataFetch()
+	{
+		io.restassured.response.Response res= RestAssured.get("https://run.mocky.io/v3/2407d9ad-8332-42f4-b739-6d627b3ec160");
+		
+		            Object resObject = res.as(Object.class);
+		            
+		            if(resObject instanceof Map)
+		            {
+		            	Map data = (Map) resObject;
+		            	
+		            	System.out.println(data.keySet());
+		            }
+		            else {
+						List data = (List) resObject;
+						
+						System.out.println(data.size());
+					}
+		
+		
+		
+	}
+	
+==============================================================================
+Video 42 :
+It is semilar to chaining of API but here we use Maps to do it because here dublicate
+must be also allowed::::
+public class Video42ShareDetailUsingMap {
+	public static LinkedHashMap<String , Object> dataMap=new LinkedHashMap<String,Object>(); 
+	public static  void mapadddata(String key,Object value)
+	{
+		dataMap.put(key, value);
+		
+		
+		//return dataMap;
+	   	
+	}
+	public static Object getValue(String key)
+	{
+		Object data = dataMap.get(key);
+		System.out.println("-------------------------");
+		System.out.println(data);
+		return data;
+	}
+
+}
+class MainSharingClass{
+	@Test(priority = 1)
+	public void dataidCreate()
+	{
+	   int id = RestAssured.given()
+		
+		.baseUri("https://restful-booker.herokuapp.com/booking")
+		.body("{\r\n"
+				+ "    \"firstname\" : \"Jim\",\r\n"
+				+ "    \"lastname\" : \"Brown\",\r\n"
+				+ "    \"totalprice\" : 111,\r\n"
+				+ "    \"depositpaid\" : true,\r\n"
+				+ "    \"bookingdates\" : {\r\n"
+				+ "        \"checkin\" : \"2018-01-01\",\r\n"
+				+ "        \"checkout\" : \"2019-01-01\"\r\n"
+				+ "    },\r\n"
+				+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+				+ "}")
+		.contentType("application/json")
+		.when()
+		.post()
+		.then()
+		.log()
+		.all()
+		.extract().jsonPath().getInt("bookingid");
+		
+		Video42ShareDetailUsingMap.mapadddata("bookingid",id);
+		//System.out.println(id);
+	 	}
+	@Test(priority = 2)
+	public void dataIdfetch()
+	{
+		System.out.println("+++++++++++++++++++++++++");
+		RestAssured.given()
+		.log().all().baseUri("https://restful-booker.herokuapp.com/booking/"+Video42ShareDetailUsingMap.getValue("bookingid"))
+		.when()
+		.get()
+		.then()
+		.log().all();
+		
+		
+	}
+	
+	
+}
+
+============================================================
+Video 43 is totally related with parellel execution in TestNG and will create issue if we will run
+multiple classes simultanusy because if Threads so to overcome this we will go for
+ the Video 44 which is based on Thred locals in java
+Actually it is giving me the overwriting issue 
+
+This we can overcome By using ThreadLocal class which is present in java 
+It has three methods set(),get(), etc  
+=========================================================================
+Video 45:
+->Using Listner we can call the two non static methods i.e setAttribute(String s,Object b) and getAttribute(String s)
+ ->It is similar to maps  and Object we store the data in the form of key and value pair....
+
+	@Test(priority = 1)
+	public void sharDataByListner(ITestContext context)
+	{
+		int id = RestAssured.given()
+				
+				.baseUri("https://restful-booker.herokuapp.com/booking")
+				.body("{\r\n"
+						+ "    \"firstname\" : \"Jim\",\r\n"
+						+ "    \"lastname\" : \"Brown\",\r\n"
+						+ "    \"totalprice\" : 111,\r\n"
+						+ "    \"depositpaid\" : true,\r\n"
+						+ "    \"bookingdates\" : {\r\n"
+						+ "        \"checkin\" : \"2018-01-01\",\r\n"
+						+ "        \"checkout\" : \"2019-01-01\"\r\n"
+						+ "    },\r\n"
+						+ "    \"additionalneeds\" : \"Breakfast\"\r\n"
+						+ "}")
+				.contentType("application/json")
+				.when()
+				.post()
+				.then()
+				.log()
+				.all()
+				.extract().jsonPath().getInt("bookingid");
+			
+		     context.setAttribute("bookingid",id);
+	}
+	@Test(priority = 2)
+	public void getDataByListner(ITestContext context)
+	{
+			System.out.println("+++++++++++++++++++++++++");
+			RestAssured.given()
+			.log().all().baseUri("https://restful-booker.herokuapp.com/booking/"+context.getAttribute("bookingid"))
+			.when()
+			.get()
+			.then()
+			.log().all();
+			
+			
+		}
+	}
+
+Note:If we store the setdata  and getData in seperat class and we try to execute these classes  simultaniously
+by using testng.xml with different Test tag then we will get null 
+
+Video46
+Add getsuite()
+
+Video47:POJO basics
+Video 48PoJO Object
+Video 49 POJO ARRAY
+
+public class Video49ArrayJSonPaypoadByPOJO {
+	
+	@Test
+	public void JsonArrayPryload()
+	{
+		Video48_49POJOClass vp= new Video48_49POJOClass();
+		vp.setCity("ALD");
+		vp.setName("AAA");
+		vp.setRollNum(1234);
+		vp.setX(333);
+		
+		Video48_49POJOClass vp1= new Video48_49POJOClass();
+		vp.setCity("ALD1");
+		vp.setName("AAA1");
+		vp.setRollNum(12341);
+		vp.setX(3331);
+		
+		List multiplObjectArray= new ArrayList();
+		multiplObjectArray.add(vp);
+		multiplObjectArray.add(vp1);
+		
+		RestAssured.given()
+		.log().all()
+		.body(multiplObjectArray)
+		.get();
+	}
+
+}
+
+Video50:
+Nested Json Object::::
+
+
+public class Video50FinalNestedJsonObject {
+	@Test
+	public void nestedJsonObject()
+	{
+		Video50NestedJsonObject  v1= new Video50NestedJsonObject();
+		
+		v1.setId(1);
+		v1.setName("RRR");
+		Video50InnerJsonObject v2 = new Video50InnerJsonObject();
+		v2.setCity("ALD");
+		v2.setDistict("Year");
+		v1.setAdress(v2);
+		
+		RestAssured.given()
+		.log().all()
+		.body(v1)
+		.get();
+		
+		
+		
+		
+		
+	}
+
+}
+
+package Practise;
+
+public class Video50InnerJsonObject {
+	
+	private String distict;
+	private String city;
+	public String getDistict() {
+		return distict;
+	}
+	public void setDistict(String distict) {
+		this.distict = distict;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+
+}
+package Practise;
+
+public class Video50NestedJsonObject {
+	
+	private int id;
+	private String name;
+	private Video50InnerJsonObject adress;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Video50InnerJsonObject getAdress() {
+		return adress;
+	}
+	public void setAdress(Video50InnerJsonObject v2) {
+		this.adress = v2;
+	}
+
+}
+
+
+In nested Json Object we will have two Pojo classses and we have to pass 
+data in body.....
+
+================================================================================
+Video51 ArrrayInsideJsonObject
+
+{
+	"id": 123,
+	"name": "sss",
+	"adress": [
+		{
+			"distict": "DYD",
+			"city": "ALD"
+		},
+		{
+			"distict": "DYD1",
+			"city": "ALD1"
+		}
+	]
+}
+
+
+
+package Practise;
+
+import java.util.List;
+
+public class Viseo51ArrayInsideJsonObject {
+	
+	private int id;
+	private String name;
+	private  List<Video51JsonObjectInner> adress;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public List<Video51JsonObjectInner> getAdress() {
+		return adress;
+	}
+	public void setAdress(List<Video51JsonObjectInner> adress) {
+		this.adress = adress;
+	}
+
+
+}
+
+
+package Practise;
+
+public class Video51JsonObjectInner {
+	
+	private String distict;
+	private String city;
+	public String getDistict() {
+		return distict;
+	}
+	public void setDistict(String distict) {
+		this.distict = distict;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
+}
+
+
+package Practise;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+
+public class Video51FinalArrayInsideObject {
+	@Test
+	public void arrayInsideObject()
+	{
+		Viseo51ArrayInsideJsonObject c= new Viseo51ArrayInsideJsonObject();
+		c.setId(123);
+		c.setName("sss");
+		
+		Video51JsonObjectInner v2 = new Video51JsonObjectInner();
+		v2.setCity("ALD");
+		v2.setDistict("DYD");
+		
+		Video51JsonObjectInner v3 = new Video51JsonObjectInner();
+		v3.setCity("ALD1");
+		v3.setDistict("DYD1");
+		
+		List l = new ArrayList<>();
+		l.add(v2);
+		l.add(v3);
+		
+		c.setAdress(l);
+		
+		RestAssured.given()
+		.log().all()
+		.body(c)
+		.get();
+		
+		
+		
+		
+		
+	
+	}
+
+}
+
+
+Video53:
+Covert Response in JSONObject:::
+
+import org.testng.annotations.Test;
+
+/*{
+    "id":1,
+    "name" : "star"
+    "age":33
+}
+*/
+public class Video53EMP {
+	private int id;
+	private String name;
+	private int age;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	
+
+}
+
+
+public class Video53JsonResponsetoPojo {
+	
+	@Test
+	public void resToPojo()
+	{
+		Video53EMP vm= RestAssured.get("https://run.mocky.io/v3/e56acc5f-127c-4dcc-9d89-90e004db66cc")
+		.as(Video53EMP.class);
+		
+		System.out.println(vm.getAge());
+		
+		
+		
+	}
+
+}
+========================================================
+
+Video 54:Convert Nested JSON Object Response IN POJO:
+Note:
+Please remember that all names must be proper
+Otherwise it will create issue:
+
+Here we need to create the multiple classes in which we need to pass
+the getter classes
+
+Note
+Repeting again plz chage the name of classes
+
+
+package demo;
+/*{
+	"id":1,
+	"name":"Ramu",
+	"Age":33,
+	"adress":
+	        {
+		      "city":"Pak",
+		      "country;":"TAT",
+		      "Street":44
+	        }
+}*/
+public class Video54NestedJsonEmployee {
+	
+	private int id;
+	private String name;
+	private int age;
+	private Address address;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	
+	//private Address address;
+
+		
+	
+	
+	
+	
+	
+	
+
+}
+
+package demo;
+
+public class Address {
+	private String city;
+	private String country;
+	private int street;
+	//private Address address;
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public int getStreet() {
+		return street;
+	}
+	public void setStreet(int street) {
+		this.street = street;
+	}
+
+		
+
+}
+
+
+
+package demo;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+
+public class Video54MainClass {
+	@Test
+	public void nestedObjectPojo()
+	{
+		Video54NestedJsonEmployee vne= RestAssured.get("https://run.mocky.io/v3/d2466df2-a741-4b18-980e-c730435db21c")
+		.as(Video54NestedJsonEmployee.class);
+		
+		System.out.println(vne.getAge());
+		
+		//System.out.println("++++++++++"+vne.getId());
+		
+		
+	}
+
+}
+========================================================
+Video55 Fetch Specific Data:
+public class Video55Address {
+	private String city;
+	private String country;
+	private int street;
+	//private Address address;
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public int getStreet() {
+		return street;
+	}
+	public void setStreet(int street) {
+		this.street = street;
+	}
+
+		
+
+}
+
+public class Video55MainClass {
+	@Test
+	public void nestedObjectPojo()
+	{
+		Video55Address vne= RestAssured.get("https://run.mocky.io/v3/d2466df2-a741-4b18-980e-c730435db21c")
+	    .jsonPath()
+	    .getObject("address",Video55Address.class);
+		
+		System.out.println(vne.getStreet());		
+		
+	}
+
+}
+
+
+
+public class Video55SecificJsonEmployee {
+	
+	private int id;
+	private String name;
+	private int age;
+	private Video55Address address;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public Video55Address getAddress() {
+		return address;
+	}
+	public void setAddress(Video55Address address) {
+		this.address = address;
+	}
+	
+	//private Address address;
+
+		
+	
+	
+}
+
+=======================================================================
+Video56:
+JSON Array Response To POJO Using Java Array To Extract Value
+
+public class ConverArrayToPojo {
+	@Test
+	public void ArrayPojoConvert()
+	{
+		PojoClass[] t= RestAssured.get("https://run.mocky.io/v3/f5c6e003-7c92-4816-8109-0b2a0bba7b5a")
+	    .as(PojoClass[].class);	
+		
+		System.out.println(t.length);
+		
+		System.out.println(t[0].getHouseNo());
+		
+	}
+
+}
+==================================================
+Video58:
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+package Video57ConvertArrayResponseToList;
+import java.util.List;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
+
+public class Video57SimpleJsonArrayResponseToList {
+	@Test
+	public void convertToList()
+	{
+		List<PojoClass> pj= RestAssured.get("https://run.mocky.io/v3/f5c6e003-7c92-4816-8109-0b2a0bba7b5a")
+	    .as(new TypeRef<List<PojoClass>>() {});
+		
+		System.out.println(pj.get(0).getHouseNo());
+		
+		
+	}
+	
+
+}
+
+========================================================
+
+Video 58:
+
+package video58ReadDataFromFileSendToPOjo;
+
+
+{
+"id": 1,
+"houseNo": 232,
+"cityName": "ALD"
+}
+
+import java.io.File;
+import java.io.IOException;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ReadDataFromJsonFile {
+	
+	@Test
+	public void resdJsonFile() throws StreamReadException, DatabindException, IOException
+	{
+		ObjectMapper om = new ObjectMapper();
+		
+		PojoClass pc= om.readValue(new File("./Video58JsonData.Json"),PojoClass.class);
+		
+	     System.out.println(pc.getHouseNo());
+		
+	}
+
+}
+
+=========================================================
+Video59Write data Partially in your API
+package Video59JsonWriteDataPartially;
+
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+
+package Video59JsonWriteDataPartially;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import video58ReadDataFromFileSendToPOjo.PojoClass;
+
+public class DynmaicDataWriteInPojo {
+	
+	@Test
+	public void dynamicDataWrite() throws StreamReadException, DatabindException, IOException
+	{
+		ObjectMapper om = new ObjectMapper();
+		
+		PojoClass pc= om.readValue(new File("./Video58JsonData.Json"),PojoClass.class);
+
+		pc.setCityName("DDDD");
+		
+		String dataWritten = om.writeValueAsString(pc);
+		
+	     System.out.println(pc.getCityName());
+		
+	}
+
+}
+
+
+It POJO class is not there then whast we will do:::
+-------------------------------------------------
+Update the JSON without POJO:
+
+
+------------------------------------------------------------------------------------
+Video 60:Create Dunamic Json Payload using POJO:(Dynamic value Remove)
+In pojo if we do not provide any value then by default it will be default 
+value...
+
+Now if we do not want default value then that key must be removed completely..
+
+If we have not provided any value do not include in JSON
+
+For this we have to use one annotaion:
+
+@JsonInclude(Json.Include.NON_Default) ->This anotation must be used aboe pojo CLass.
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+
+
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+
+
+public class DynamicJsonPayload {
+	@Test
+	public void dynamicData() throws JsonProcessingException
+	{
+	PojoClass pc = new PojoClass();
+	pc.setId(1);
+	pc.setCityName("DD");
+	pc.setHouseNo(232);
+	ObjectMapper om = new ObjectMapper();
+	//String data= om.writeValueAsString(pc);
+	String data= om.writerWithDefaultPrettyPrinter().writeValueAsString(pc);
+	System.out.println(data);
+	}
+}
+====================================================
+Video61:
+Create dynamic JSOn with payload using POJO-->NON_NULL
+
+See some times we will have Scenario like age of child is 0 so
+this is not correct 
+And in this if we give 0 default value the it will not show because 
+it will consider as 0
+So to overcome this
+We will use NON_NULL
+
+package Video61DynamicJsonPayLoadJNON_NULL;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+
+package Video61DynamicJsonPayLoadJNON_NULL;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class DynamicJsonPayload {
+	@Test
+	public void dynamicData() throws JsonProcessingException
+	{
+	PojoClass pc = new PojoClass();
+	pc.setId(1);
+	pc.setCityName("DD");
+	pc.setHouseNo(232);
+	ObjectMapper om = new ObjectMapper();
+	//String data= om.writeValueAsString(pc);
+	String data= om.writerWithDefaultPrettyPrinter().writeValueAsString(pc);
+	System.out.println(data);
+	}
+}
+===========================================================================
+
+Video68:
+DynamicJsonPaylodByUsing-NONEMPTY
+This non Empty we can get in ARRAY and MAPS so to overcome this we will go for NONEMPTY
+In this as we know List and Maps can provide the EMPTY sets of Data so bymistake if we provided it
+then our data must be removed automatically.
+
+
+package Video62DynamicJsonPayloadNONEMPTY;
+
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+    private List listdata;
+    private Map<String,Object> mapData;
+	public List getListdata() {
+		return listdata;
+	}
+	public void setListdata(List listdata) {
+		this.listdata = listdata;
+	}
+	public Map<String, Object> getMapData() {
+		return mapData;
+	}
+	public void setMapData(Map<String, Object> mapData) {
+		this.mapData = mapData;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+
+
+package Video62DynamicJsonPayloadNONEMPTY;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class DynamicJsonPayload {
+	@Test
+	public void dynamicData() throws JsonProcessingException
+	{
+	PojoClass pc = new PojoClass();
+	pc.setId(0);
+	pc.setCityName("DD");
+	pc.setListdata(new ArrayList<>());
+	pc.setMapData(new LinkedHashMap<>());
+	pc.setHouseNo(232);
+	ObjectMapper om = new ObjectMapper();
+	//String data= om.writeValueAsString(pc);
+	String data= om.writerWithDefaultPrettyPrinter().writeValueAsString(pc);
+	System.out.println(data);
+	}
+}
+
+====================================================================
+Video63:JsonInscudePropertyLevel
+Till now we have provided all the JsonIncule at the class level we can provide this to the 
+perticular varible level also....
+==================================================================
+Video64:When and how to use @JsonIncludeProperties annotation in Pojo 
+In this we will so when we want any some key for serilization 
+package Video64JsonIncludePropertiesAnotation;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
+//@JsonIncludeProperties(value = {"id"})
+public class PojoClass {
+    private int id;
+    private int houseNo;
+    private String cityName;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getHouseNo() {
+		return houseNo;
+	}
+	public void setHouseNo(int houseNo) {
+		this.houseNo = houseNo;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+    
+
+}
+
+package Video64JsonIncludePropertiesAnotation;
+
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
+@JsonIncludeProperties(value = {"id","street"})
+public class PojoClass1 extends PojoClass {
+	public int getStreet() {
+		return street;
+	}
+
+	private int street;
+
+}
+
+package Video64JsonIncludePropertiesAnotation;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class DynamicJsonPayload {
+	@Test
+	public void dynamicData() throws JsonProcessingException
+	{
+	PojoClass1 pc = new PojoClass1();
+	pc.setId(0);
+	pc.setCityName("DD");
+	pc.setHouseNo(232);
+	ObjectMapper om = new ObjectMapper();
+	//String data= om.writeValueAsString(pc);
+	String data= om.writerWithDefaultPrettyPrinter().writeValueAsString(pc);
+	System.out.println(data);
+	}
+}
+==============================================================
+
+Video65:How to extract Dynamic Json Using @JsonIgnoreProperties
+
+{
+  "id":2,
+  "name":"star",
+  "age":33,
+  "street":"44"
+}
+
+
+package Video65JsonIgnoreProderties;
+
+public class Emp {
+	private int id;
+	private String name;
+	private int age;
+	private String street;
+	
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+}
+
+
+
+
+package Video65JsonIgnoreProderties;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ExtractDynamicJSOn {
+	@Test
+	public void extractAllData() throws JsonMappingException, JsonProcessingException
+	{
+		String jsonData="\r\n"
+				+ "\r\n"
+				+ "{\r\n"
+				+ "  \"id\":2,\r\n"
+				+ "  \"name\":\"star\",\r\n"
+				+ "  \"age\":33,\r\n"
+				+ "  \"street\":\"44\"\r\n"
+				+ "}";
+		ObjectMapper om = new ObjectMapper();
+		Emp em= om.readValue(jsonData,Emp.class);
+		
+		System.out.println(em.getAge());
+		System.out.println(em.getStreet());
+		System.out.println(em.getName());
+		System.out.println(em.getId());
+	}
+
+}
+
+
+Now in this if we try to fetch any data which is not present then it will 
+provide default value..
+
+Now suppose if any extra keyis present in our json but we have
+not provided in POJO class
+then we will get Exception ->com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
+So to overcome thid we use @JsonIgnorenceProperties(ignoreUnknown=true)
+
+package Video65JsonIgnoreProderties;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Emp {
+	private int id;
+	private String name;
+	private int age;
+	private String street;
+	
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+}
+
+
+
+package Video65JsonIgnoreProderties;
+
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ExtractDynamicJSOn {
+	@Test
+	public void extractAllData() throws JsonMappingException, JsonProcessingException
+	{
+		String jsonData="\r\n"
+				+ "\r\n"
+				+ "{\r\n"
+				+ "  \"ida\":2,\r\n"
+				+ "  \"name\":\"star\"\r\n"
+				+ "}";
+		ObjectMapper om = new ObjectMapper();
+		Emp em= om.readValue(jsonData,Emp.class);
+		
+		System.out.println(em.getAge());
+		System.out.println(em.getStreet());
+		System.out.println(em.getName());
+		System.out.println(em.getId());
+	}
+
+}
+==========================================================
+Video66 POJO For JSON With Property Not Valid Java Variable? -@JsonProperty
+Sometimes we will get the JSON which are not valid in java to create the
+variable so to avoid this we will use @JsonProperty
+
+
+====================================================================
+Video 67:
+It is similar to above cases only one extra that us Map concept
+
+Map<String,Object> mapdata=om.readValue(jsonData,Maps.class);
+================================================
+Video68:Verify JsonResponse
+It can be done by Matchers which is cominh from hamcrest
+
+{
+  "id":1,
+  "name":"SSS",
+  "lname":"Dog",
+  "eat":
+      [12345,32123]
+  
+}
+
+package Video68AssertJsonObjectARRAY;
+
+import java.util.List;
+import java.util.Map;
+
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+
+public class AssertData {
+	@Test
+	public void verify()
+	{
+		RestAssured.get("https://run.mocky.io/v3/482cc702-bfc9-4974-921d-a8533ad813d1")
+		.then()
+		.body("$",Matchers.instanceOf(Map.class));
+		
+		RestAssured.get("https://run.mocky.io/v3/482cc702-bfc9-4974-921d-a8533ad813d1")
+		.then()
+		.body("eat",Matchers.instanceOf(List.class));
+	
+	}
+
+}
+
+
+
+========================================================================
+Video69:
+How To Use Project Lombok To Remove Boilerplate code Getter And Setter Methods From POJO::
+
+->This LombokProject is used to remove getter and setters from the POJO class and add all the 
+getter and setters automaticaly....
+
+To use this we have to add the dependenci of it as well as we need to add
+the plugin in our project...
+
+@Getter
+@Setter
+public class PojoClass {
+	private int x;
+	private String adaress;
+	private String name;
+
+}
+public class MainClass {
+	@Test
+	public void m1()
+	{
+		PojoClass pj = new PojoClass();
+		pj.getAdaress();
+		
+	    
+	}
+
+}
+
+
+======================================================
+Video70(not good)
+===============================================
+Video71:
+ Implementation Of Retry Mechanism Using Awaitility In Rest Assured
+
+Same as IretryAnalyser here we use Awaitility in Rest Assured
+In is used similal to Fluent wait
+Syantax
+Awaitility.await().atMost(Duration.ofSeconds(20))
+		.pollDelay(Duration.ofSeconds(2))
+		.until(() -> ClassName.methodName==200)
+
+
+
+package Video71RetryAnalyzerByAwatibility;
+
+import java.util.Random;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+
+public class MainClass {
+	@Test
+	public static int test()
+	{
+		Random r = new Random();
+		int num=r.nextInt(1);
+		if(num%2==0)
+		{
+			Response res= RestAssured.given()
+			.contentType(ContentType.JSON)
+			.when()
+			.get("https://restful-booker.herokuapp.com/booking/1");
+			int resdata=res.getStatusCode();
+			return  resdata;
+			}
+		else
+		{
+			return 0;
+		}
+	}
+
+}
+
+
+package Video71RetryAnalyzerByAwatibility;
+
+import java.time.Duration;
+
+import org.awaitility.Awaitility;
+import org.testng.annotations.Test;
+
+public class RetryAwatibility {
+	@Test
+	public void m1()
+	{
+		MainClass c = new MainClass();
+		System.out.println(c.test());
+		Awaitility.await().atMost(Duration.ofSeconds(20))
+		.pollDelay(Duration.ofSeconds(2))
+		.until(() -> MainClass.test()==200);
+	}
+
+}
+==========================================================

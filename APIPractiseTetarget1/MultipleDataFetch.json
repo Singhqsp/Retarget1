@@ -1,0 +1,124 @@
+[
+	{
+		"firstName": "Mukesh",
+		"lastName": "Ota",
+		"age": 31,
+		"adress": [
+			{
+				"city": "ald",
+				"country": "India"
+			},
+			{
+				"city": "pak",
+				"country": "India"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh1",
+		"lastName": "Ota",
+		"age": 311,
+		"adress": [
+			{
+				"city": "ald1",
+				"country": "India1"
+			},
+			{
+				"city": "pak1",
+				"country": "India1"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh2",
+		"lastName": "Ota",
+		"age": 312,
+		"adress": [
+			{
+				"city": "ald2",
+				"country": "India2"
+			},
+			{
+				"city": "pak2",
+				"country": "India2"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh3",
+		"lastName": "Ota",
+		"age": 313,
+		"adress": [
+			{
+				"city": "ald3",
+				"country": "India3"
+			},
+			{
+				"city": "pak3",
+				"country": "India3"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh4",
+		"lastName": "Ota",
+		"age": 314,
+		"adress": [
+			{
+				"city": "ald4",
+				"country": "India4"
+			},
+			{
+				"city": "pak4",
+				"country": "India4"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh5",
+		"lastName": "Ota",
+		"age": 315,
+		"adress": [
+			{
+				"city": "ald5",
+				"country": "India5"
+			},
+			{
+				"city": "pak5",
+				"country": "India5"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh6",
+		"lastName": "Ota",
+		"age": 316,
+		"adress": [
+			{
+				"city": "ald6",
+				"country": "India6"
+			},
+			{
+				"city": "pak6",
+				"country": "India6"
+			}
+		]
+	},
+	{
+		"firstName": "Mukesh7",
+		"lastName": "Ota",
+		"age": 317,
+		"adress": [
+			{
+				"city": "ald7",
+				"country": "India7"
+			},
+			{
+				"city": "pak7",
+				"country": "India7"
+			}
+		]
+	
+		
+	}
+]	
